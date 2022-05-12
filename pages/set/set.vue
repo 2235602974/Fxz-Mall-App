@@ -12,7 +12,7 @@
 			<text class="cell-tit">实名认证</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		
+
 		<view class="list-cell m-t">
 			<text class="cell-tit">消息推送</text>
 			<switch checked color="#fa436a" @change="switchChange" />
@@ -37,13 +37,12 @@
 </template>
 
 <script>
-	import {  
-	    mapMutations  
-	} from 'vuex';
+	import {mapMutations} from 'vuex';
+
 	export default {
 		data() {
 			return {
-				
+
 			};
 		},
 		methods:{
@@ -58,7 +57,7 @@
 				    content: '确定要退出登录么',
 				    success: (e)=>{
 				    	if(e.confirm){
-				    		this.logout();
+                this.$store.dispatch('user/logout');
 				    		setTimeout(()=>{
 				    			uni.navigateBack();
 				    		}, 200)
@@ -103,7 +102,7 @@
 			left: 30upx;
 		}
 		&.m-t{
-			margin-top: 16upx; 
+			margin-top: 16upx;
 		}
 		.cell-more{
 			align-self: baseline;
