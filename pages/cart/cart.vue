@@ -9,7 +9,7 @@
 			</view>
 			<view v-else class="empty-tips">
 				空空如也
-				<view class="navigator" @click="navToLogin">去登陆></view>
+				<view class="navigator" @click="navToLogin">去登陆</view>
 			</view>
 		</view>
 		<view v-else>
@@ -17,18 +17,18 @@
 			<view class="cart-list">
 				<block v-for="(item, index) in cartList" :key="item.id">
 					<view
-						class="cart-item" 
+						class="cart-item"
 						:class="{'b-b': index!==cartList.length-1}"
 					>
 						<view class="image-wrapper">
-							<image :src="item.image" 
+							<image :src="item.image"
 								:class="[item.loaded]"
-								mode="aspectFill" 
-								lazy-load 
-								@load="onImageLoad('cartList', index)" 
+								mode="aspectFill"
+								lazy-load
+								@load="onImageLoad('cartList', index)"
 								@error="onImageError('cartList', index)"
 							></image>
-							<view 
+							<view
 								class="yticon icon-xuanzhong2 checkbox"
 								:class="{checked: item.checked}"
 								@click="check('item', index)"
@@ -38,9 +38,9 @@
 							<text class="clamp title">{{item.title}}</text>
 							<text class="attr">{{item.attr_val}}</text>
 							<text class="price">¥{{item.price}}</text>
-							<uni-number-box 
+							<uni-number-box
 								class="step"
-								:min="1" 
+								:min="1"
 								:max="item.stock"
 								:value="item.number>item.stock?item.stock:item.number"
 								:isMax="item.number>=item.stock?true:false"
@@ -56,8 +56,8 @@
 			<!-- 底部菜单栏 -->
 			<view class="action-section">
 				<view class="checkbox">
-					<image 
-						:src="allChecked?'/static/selected.png':'/static/select.png'" 
+					<image
+						:src="allChecked?'/static/selected.png':'/static/select.png'"
 						mode="aspectFit"
 						@click="check('all')"
 					></image>
@@ -80,9 +80,8 @@
 </template>
 
 <script>
-	import {
-		mapState
-	} from 'vuex';
+	import {mapGetters} from 'vuex';
+
 	import uniNumberBox from '@/components/uni-number-box.vue'
 	export default {
 		components: {
@@ -109,12 +108,12 @@
 			}
 		},
 		computed:{
-			...mapState(['hasLogin'])
+			...mapGetters(['hasLogin'])
 		},
 		methods: {
 			//请求数据
 			async loadData(){
-				let list = await this.$api.json('cartList'); 
+				let list = await this.$api.json('cartList');
 				let cartList = list.map(item=>{
 					item.checked = true;
 					return item;
@@ -302,7 +301,7 @@
 		}
 		.del-btn{
 			padding:4upx 10upx;
-			font-size:34upx; 
+			font-size:34upx;
 			height: 50upx;
 			color: $font-color-light;
 		}
