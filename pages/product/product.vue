@@ -5,7 +5,7 @@
       <swiper indicator-dots circular="true" duration="400">
         <swiper-item class="swiper-item" v-for="(item, index) in goodsInfo.album" :key="index">
           <view class="image-wrapper">
-            <image :src="item" class="loaded" mode="aspectFill"></image>
+            <image :src="getImg(item)" class="loaded" mode="aspectFill"></image>
           </view>
         </swiper-item>
       </swiper>
@@ -15,8 +15,8 @@
       <text class="title">{{ goodsInfo.name }}</text>
       <view class="price-box">
         <text class="price-tip">¥</text>
-        <text class="price">{{ goodsInfo.price |moneyFormatter }}</text>
-        <text class="m-price">¥{{ goodsInfo.originPrice |moneyFormatter }}</text>
+        <text class="price">{{ goodsInfo.price / 100 }}</text>
+        <text class="m-price">¥{{ goodsInfo.originPrice /100 }}</text>
         <!-- <text class="coupon-tip">7折</text> -->
       </view>
       <view class="bot-row">
@@ -129,7 +129,7 @@
         <view class="a-t">
           <image :src="selectedSku.picUrl" />
           <view class="right">
-            <text class="price">¥{{selectedSku.price|moneyFormatter}}</text>
+            <text class="price">¥{{selectedSku.price/100}}</text>
             <text class="stock">库存：{{selectedSku.stockNum}}件</text>
             <view class="selected">
               已选：
@@ -164,9 +164,7 @@ import {getSpuDetail, getStockNum} from '../../api/product/goods.js';
 //import {addCartItem, confirm as orderConfirm} from '@/api/oms/cart.js'
 
 export default {
-  components: {
-    share
-  },
+  components: {share},
   data() {
     return {
       goodsInfo: { // 商品信息
@@ -185,19 +183,14 @@ export default {
       selectedSpecValues: [], // 选择的规格项集合
       favorite: true,
       shareList: []
-
     };
   },
   async onLoad(options) {
     console.log('========>> 进入商品详情页面, 路径:', this.$mp.page.route, '参数', options);
     const goodsId = options.id
     getSpuDetail(goodsId).then(response => {
-      const {
-        goodsInfo,
-        attributeList,
-        specList,
-        skuList
-      } = response.data;
+      const {goodsInfo, attributeList, specList, skuList} = response.data;
+
       this.goodsInfo = goodsInfo;
       this.attributeList = attributeList;
       this.specList = specList;
@@ -213,9 +206,14 @@ export default {
 
       // 默认选择规格项ID的集合
       const defaultSelectedSpecIds = this.selectedSpecValues.map(item => item.id)
+      console.log('defaultSelectedSpecIds:',defaultSelectedSpecIds)
+
+      console.log('skuList:',this.skuList)
+
       // 默认规格项集合生成默认商品库存单元
-      this.selectedSku = this.skuList.filter(sku => sku.specIds.split('_').equals(
-          defaultSelectedSpecIds))[0]
+      // this.selectedSku = this.skuList.filter(sku => sku.specIds.split('_').equals(
+      //     defaultSelectedSpecIds))[0]
+      this.selectedSku = this.skuList[0]
     });
     this.shareList = await this.$api.json('shareList');
   },
@@ -285,7 +283,10 @@ export default {
         });
       })
     },
-    stopPrevent() {}
+    stopPrevent() {},
+    getImg(url){
+      return 'http://127.0.0.1:8301'+url
+    }
   }
 };
 

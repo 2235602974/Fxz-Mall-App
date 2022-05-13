@@ -4,7 +4,7 @@
       <image class="bg" src="/static/user-bg.jpg"></image>
       <view class="user-info-box">
         <view class="portrait-box" @click="hasLogin == false && navTo('/pages/login/login')">
-          <image class="portrait" :src="avatar || '/static/missing-face.png'"></image>
+          <image class="portrait" :src="getImg(avatar) || '/static/missing-face.png'"></image>
         </view>
         <view class="info-box">
           <text class="username">{{ nickname || '游客' }}</text>
@@ -210,6 +210,9 @@ export default {
       this.moving = false;
       this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
       this.coverTransform = 'translateY(0px)';
+    },
+    getImg(url){
+      return 'http://127.0.0.1:8301'+url
     }
   }
 };

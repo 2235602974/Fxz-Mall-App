@@ -13,7 +13,7 @@
           <input :value="username" placeholder="请输入账号" maxlength="11" data-key="username"
                  @input="inputChange" />
         </view>
-
+ 
         <view class="input-item" style="position: relative;">
           <text class="tit">密码</text>
           <input :value="password" placeholder="请输入密码" maxlength="11" data-key="password"
