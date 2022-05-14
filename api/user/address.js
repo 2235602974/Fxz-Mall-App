@@ -1,12 +1,9 @@
 import request from "../../utils/request";
 
-export function list(memberId) {
+export function list() {
 	return request({
-		url: '/mall-ums/app-api/v1/addresses',
+		url: '/user/app/address/findAll',
 		method: 'get',
-		params: {
-			memberId: memberId
-		},
 		headers: {
 			'auth': true // 需要认证
 		}
@@ -16,7 +13,7 @@ export function list(memberId) {
 
 export function add(data) {
 	return request({
-		url: '/mall-ums/app-api/v1/addresses',
+		url: '/user/app/address/add',
 		method: 'post',
 		data: data,
 		headers: {
@@ -26,10 +23,10 @@ export function add(data) {
 }
 
 
-export function update(id, data) {
+export function update(data) {
 	return request({
-		url: '/mall-ums/app-api/v1/addresses/' + id,
-		method: 'put',
+		url: '/user/app/address/update',
+		method: 'post',
 		data: data,
 		headers: {
 			'auth': true // 需要认证

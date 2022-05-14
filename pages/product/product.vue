@@ -161,7 +161,7 @@ import share from '@/components/share';
 
 import {getSpuDetail, getStockNum} from '../../api/product/goods.js';
 
-//import {addCartItem, confirm as orderConfirm} from '@/api/oms/cart.js'
+//import {addCartItem, confirm as orderConfirm} from '@/api/order/cart.js'
 
 export default {
   components: {share},
