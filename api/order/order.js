@@ -23,3 +23,15 @@ export function submit(data) {
         }
     })
 }
+
+// 订单支付
+export function pay(orderId, payType) {
+    return request({
+        url: '/order/app/orders/' + orderId + '/pay',
+        method: 'post',
+        params: {payType: payType},
+        headers: {
+            'auth': true // 需要认证
+        }
+    })
+}
