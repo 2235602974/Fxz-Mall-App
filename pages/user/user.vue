@@ -38,7 +38,7 @@
 
       <view class="tj-sction">
         <view class="tj-item">
-          <text class="num">{{balance|moneyFormatter}}</text>
+          <text class="num">{{balance / 100}}</text>
           <text>余额</text>
         </view>
         <view class="tj-item">

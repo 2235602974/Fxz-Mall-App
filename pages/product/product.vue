@@ -161,7 +161,7 @@ import share from '@/components/share';
 
 import {getSpuDetail, getStockNum} from '../../api/product/goods.js';
 
-//import {addCartItem, confirm as orderConfirm} from '@/api/order/cart.js'
+import {addCartItem} from "../../api/order/cart";
 
 export default {
   components: {share},
@@ -271,6 +271,7 @@ export default {
     // 添加至购物车
     addToCart() {
       const skuId = this.selectedSku.id
+
       addCartItem(skuId).then(response => {
         uni.switchTab({
           url: `/pages/cart/cart`,

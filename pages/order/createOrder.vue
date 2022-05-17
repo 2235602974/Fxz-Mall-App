@@ -126,7 +126,8 @@ export default {
       couponList: [],
       totalAmount: 0,
       selectedAddress: undefined,
-      orderItems: []
+      orderItems: [],
+      sourceType: 1
     };
   },
   onLoad(option) {
@@ -140,8 +141,13 @@ export default {
         const {
           orderToken,
           orderItems,
-          addresses
+          addresses,
+          sourceType
         } = response.data;
+
+        //设置订单来源
+        this.sourceType = sourceType
+
         // 选择一个地址，有默认地址首选默认，无则获取第一个地址
         if (addresses && addresses.length > 0) {
           const candidateAddresses = addresses.filter(item => item.defaulted == 1);
@@ -202,7 +208,8 @@ export default {
         totalAmount: this.totalAmount, // 订单商品总价，用于后台验价
         deliveryAddress: this.selectedAddress, // 收货地址
         remark: this.remark, // 订单备注
-        payAmount: this.payAmount // 订单支付金额
+        payAmount: this.payAmount, // 订单支付金额,
+        sourceType: this.sourceType // 订单来源
       };
       console.log('========订单提交========', data);
       submit(data).then(response => {
