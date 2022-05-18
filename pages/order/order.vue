@@ -213,9 +213,9 @@ export default {
     // 订单支付
     doPay(order) {
       console.info('========订单支付========');
-      let orderId = order.id;
+
       uni.redirectTo({
-        url: "/pages/money/pay?orderId=" + orderId,
+        url: '/pages/money/pay?orderId=' + order.id + '&orderSn=' + order.orderSn + '&payAmount=' + order.payAmount
       });
     },
     getImg(url){
