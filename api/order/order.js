@@ -35,3 +35,38 @@ export function pay(orderId, payType) {
         }
     })
 }
+
+// 取消订单
+export function cancelOrder(orderId) {
+    return request({
+        url: '/order/app/orders/cancel',
+        method: 'put',
+        params: {orderId},
+        headers: {
+            'auth': true // 需要认证
+        }
+    })
+}
+
+// 删除订单
+export function deleteOrder(orderId) {
+    return request({
+        url: '/order/app/orders/' + orderId,
+        method: 'delete',
+        headers: {
+            'auth': true // 需要认证
+        }
+    })
+}
+
+// 订单列表
+export function listOrdersWithPage(params) {
+    return request({
+        url: '/order/app/orders',
+        method: 'get',
+        params: params,
+        headers: {
+            'auth': true // 需要认证
+        }
+    })
+}
