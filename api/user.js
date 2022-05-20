@@ -3,6 +3,7 @@
  */
 import request from "../utils/request";
 
+// #ifdef MP
 export function login(parameter) {
     // 密码模式
     const grant_type = 'password'
@@ -12,13 +13,32 @@ export function login(parameter) {
         method: 'post',
         data: parameter,
         headers: {
-            // 'Authorization': 'Basic c3dhZ2dlcjoxMjM0NTY=' // swagger:123456 避免验证验证码 http://localhost:8301/auth/captcha?key=77777439生成验证码
-            // fxz:123456
+            // mall-app:123456
             'Authorization': 'Basic bWFsbC1hcHA6MTIzNDU2'
         },
         params: {grant_type, username: parameter.username, password: parameter.password}
     })
 }
+// #endif
+
+// #ifndef MP
+export function login(parameter) {
+    return request({
+        url: '/auth/oauth/token',
+        method: 'post',
+        headers: {
+            // mall-app:123456
+            'Authorization': 'Basic bWFsbC1hcHA6MTIzNDU2'
+        },
+        params: {
+            mobile: parameter.mobile,
+            code: parameter.code,
+            grant_type: 'sms_code'
+        }
+    })
+}
+// #endif
+
 
 export function getUserInfo () {
     return request({
@@ -41,12 +61,3 @@ export function logout() {
     })
 }
 
-export function sendSmsCode(phoneNumber) {
-    return request({
-        url: '/youlai-auth/sms-code',
-        method: 'post',
-        params: {
-            phoneNumber: phoneNumber
-        }
-    })
-}

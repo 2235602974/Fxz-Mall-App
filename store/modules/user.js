@@ -27,6 +27,7 @@ const mutations = {
 }
 
 const actions = {
+    //  #ifdef MP
     login({commit}, data) {
         return new Promise((resolve, reject) => {
             login(data).then(response => {
@@ -46,6 +47,29 @@ const actions = {
             })
         })
     },
+    // #endif
+
+    //  #ifndef MP
+    login({commit}, data) {
+        const {mobile, code} = data
+        return new Promise((resolve, reject) => {
+            login({mobile, code}).then(response => {
+                console.log('response:', response)
+
+                const {access_token, token_type} = response
+
+                const token = token_type + " " + access_token
+
+                uni.setStorageSync('token', token)
+                commit('SET_HAS_LOGIN', true)
+
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    // #endif
 
     // get user info
     getUserInfo({commit, state}) {

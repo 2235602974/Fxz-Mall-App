@@ -5,6 +5,7 @@
     <view class="right-top-sign"></view>
     <view class="wrapper">
 
+      <!-- #ifdef MP -->
       <view class="left-top-sign">LOGIN</view>
       <view class="welcome">欢迎回来！</view>
       <view class="input-content">
@@ -13,7 +14,7 @@
           <input :value="username" placeholder="请输入账号" maxlength="11" data-key="username"
                  @input="inputChange" />
         </view>
- 
+
         <view class="input-item" style="position: relative;">
           <text class="tit">密码</text>
           <input :value="password" placeholder="请输入密码" maxlength="11" data-key="password"
@@ -26,6 +27,34 @@
       <view class="tip">
         默认账号/密码:
       </view>
+      <!-- #endif -->
+
+      <!-- H5、Android、IOS登录授权界面 -->
+      <!-- #ifndef MP -->
+      <view class="left-top-sign">LOGIN</view>
+      <view class="welcome">欢迎回来!</view>
+      <view class="input-content">
+        <view class="input-item" style="position: relative;">
+          <text class="tit">手机号码</text>
+          <input :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile"
+                 @input="inputChange" />
+          <button :disabled="!isCorretPhoneNumber" class="sms-code-btn"
+                  :class="{correct_phone_number:isCorretPhoneNumber}" @click.prevent="getSmsCode">
+            {{countdown>0 ? `(${countdown}s)已发送` : '获取验证码'}}
+          </button>
+        </view>
+
+        <view class="input-item">
+          <text class="tit">验证码</text>
+          <input :value="verificationCode" placeholder="6位随机数字组合" placeholder-class="input-empty" maxlength="20"
+                 data-key="verificationCode" @input="inputChange" @confirm="toLogin" />
+        </view>
+      </view>
+      <button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
+      <view class="tip">
+        默认手机号码/验证码:
+      </view>
+      <!-- #endif -->
 
     </view>
 
@@ -41,12 +70,14 @@
 import {
   mapMutations
 } from 'vuex';
+import {sendSmsCode} from "../../api/system/sms";
 
 export default {
   data() {
     return {
+      mobile:undefined,
+      verificationCode: undefined,
       username: '',
-      verificationCode: 666666,
       password: undefined,
       logining: false,
       countdown: 0,
@@ -54,7 +85,12 @@ export default {
       code: undefined
     };
   },
-  computed: {},
+  computed: {
+    // 手机号码验证
+    isCorretPhoneNumber() {
+      return /^1[3456789]\d{9}$/.test(this.mobile);
+    }
+  },
   onLoad() {},
   methods: {
     ...mapMutations(['login']),
@@ -68,6 +104,8 @@ export default {
     toRegist() {
       this.$api.msg('去注册');
     },
+
+    //  #ifdef MP
     async toLogin() {
       this.logining = true;
       this.$store.dispatch('user/login', {
@@ -83,6 +121,41 @@ export default {
         this.logining = false;
       });
     },
+    // #endif
+
+    //  #ifndef MP
+    getSmsCode() {
+      if (!this.countdown) {
+        this.countdown = 60;
+        this.timer = setInterval(() => {
+          this.countdown--;
+          if (this.countdown <= 0) {
+            clearInterval(this.timer)
+          }
+        }, 1000);
+
+        sendSmsCode(this.mobile).then(_ => {
+          this.$api.msg('短信已发送');
+        })
+      }
+    },
+
+    async toLogin() {
+      this.logining = true;
+      this.$store.dispatch('user/login', {
+        code: this.verificationCode,
+        mobile: this.mobile
+      }).then(res => {
+        this.$store.dispatch('user/getUserInfo');
+
+        uni.switchTab({
+          url: '/pages/index/index'
+        });
+      }).catch(() => {
+        this.logining = false;
+      });
+    },
+    // #endif
 
   }
 };
