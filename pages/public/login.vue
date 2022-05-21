@@ -5,27 +5,11 @@
     <view class="right-top-sign"></view>
     <view class="wrapper">
 
+      <!-- 小程序登录授权界面 -->
       <!-- #ifdef MP -->
-      <view class="left-top-sign">LOGIN</view>
-      <view class="welcome">欢迎回来！</view>
-      <view class="input-content">
-        <view class="input-item" style="position: relative;">
-          <text class="tit">账号</text>
-          <input :value="username" placeholder="请输入账号" maxlength="11" data-key="username"
-                 @input="inputChange" />
-        </view>
-
-        <view class="input-item" style="position: relative;">
-          <text class="tit">密码</text>
-          <input :value="password" placeholder="请输入密码" maxlength="11" data-key="password"
-                 @input="inputChange" />
-        </view>
-      </view>
-
-      <button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-
+      <button class="confirm-btn" @click.stop="getUserProfile">小程序登录授权</button>
       <view class="tip">
-        默认账号/密码:
+        温馨提示:未注册的用户,初次登录时将完成注册
       </view>
       <!-- #endif -->
 
@@ -51,9 +35,6 @@
         </view>
       </view>
       <button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
-      <view class="tip">
-        默认手机号码/验证码:
-      </view>
       <!-- #endif -->
 
     </view>
@@ -91,7 +72,11 @@ export default {
       return /^1[3456789]\d{9}$/.test(this.mobile);
     }
   },
-  onLoad() {},
+  onLoad() {
+    // #ifdef MP
+    this.getCode()
+    // #endif
+  },
   methods: {
     ...mapMutations(['login']),
     inputChange(e) {
@@ -106,20 +91,45 @@ export default {
     },
 
     //  #ifdef MP
-    async toLogin() {
+    getUserProfile() {
+      uni.getUserProfile({
+        lang: 'zh_CN',
+        desc: '获取用户相关信息',
+        success: response => {
+          const {
+            encryptedData,
+            iv
+          } = response
+          this.login(encryptedData, iv)
+        }
+      })
+    },
+    async login(encryptedData, iv) {
       this.logining = true;
       this.$store.dispatch('user/login', {
-        password: this.password,
-        username: this.username
+        code: this.code,
+        encryptedData: encryptedData,
+        iv: iv
       }).then(res => {
         this.$store.dispatch('user/getUserInfo');
-
         uni.switchTab({
           url: '/pages/index/index'
         });
       }).catch(() => {
         this.logining = false;
       });
+    },
+    getCode() {
+      uni.login({
+        provider: 'weixin',
+        success: res => {
+          console.log('code:'+res.code)
+          this.code = res.code
+        },
+        fail: err => {
+          console.log(err)
+        }
+      })
     },
     // #endif
 

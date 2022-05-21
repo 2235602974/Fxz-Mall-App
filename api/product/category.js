@@ -7,10 +7,7 @@ export function list (parentId) {
   return request({
     url: '/product/app/category/list',
     params: { parentId },
-    method: 'GET',
-    headers: {
-      'auth': true
-    }
+    method: 'GET'
   })
 }
 

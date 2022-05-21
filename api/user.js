@@ -5,18 +5,14 @@ import request from "../utils/request";
 
 // #ifdef MP
 export function login(parameter) {
-    // 密码模式
-    const grant_type = 'password'
-
     return request({
         url: '/auth/oauth/token',
         method: 'post',
-        data: parameter,
         headers: {
-            // mall-app:123456
-            'Authorization': 'Basic bWFsbC1hcHA6MTIzNDU2'
+            // wechat:123456
+            'Authorization': 'Basic d2VjaGF0OjEyMzQ1Ng=='
         },
-        params: {grant_type, username: parameter.username, password: parameter.password}
+        params: {grant_type:'wechat', code: parameter.code, encryptedData: parameter.encryptedData,iv:parameter.iv,}
     })
 }
 // #endif
@@ -30,11 +26,7 @@ export function login(parameter) {
             // mall-app:123456
             'Authorization': 'Basic bWFsbC1hcHA6MTIzNDU2'
         },
-        params: {
-            mobile: parameter.mobile,
-            code: parameter.code,
-            grant_type: 'sms_code'
-        }
+        params: {mobile: parameter.mobile, code: parameter.code, grant_type: 'sms_code'}
     })
 }
 // #endif
