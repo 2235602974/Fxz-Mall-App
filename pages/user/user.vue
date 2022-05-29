@@ -4,7 +4,7 @@
       <image class="bg" src="/static/user-bg.jpg"></image>
       <view class="user-info-box">
         <view class="portrait-box" @click="hasLogin == false && navTo('/pages/public/login')">
-          <image class="portrait" :src="getImg(avatar) || '/static/missing-face.png'"></image>
+          <image class="portrait" :src="avatar || '/static/missing-face.png'"></image>
         </view>
         <view class="info-box">
           <text class="username">{{ nickname || '游客' }}</text>

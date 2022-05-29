@@ -5,11 +5,11 @@ import request from '../../utils/request'
  */
 export function listSpuWithPage(params) {
     return request({
-        url: '/product/app/goods/page',
+        url: '/search/app/es/goods/page',
         params,
         method: 'GET',
         headers: {
-            'auth': true
+            'auth': false
         }
     })
 }
@@ -21,10 +21,10 @@ export function listSpuWithPage(params) {
  */
 export function getSpuDetail(spuId) {
     return request({
-        url: '/product/app/goods/' + spuId,
+        url: '/search/app/es/goods/' + spuId,
         method: 'get',
         headers: {
-            'auth': true
+            'auth': false
         }
     })
 }
