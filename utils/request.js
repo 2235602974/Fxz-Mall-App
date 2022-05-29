@@ -66,16 +66,15 @@ service.interceptors.response.use(({
 		return data
 	},
 	error => {
-		const {
-			code,msg
-		} = error.response.data
+		const {msg} = error.response.data
+		const status = error.response.status
 
-		if (code === '401') { // token过期
+		if (status == '401') { // token过期
 			uni.showToast({
 				title: '会话已过期，请重新登录',
 				success() {
 					uni.navigateTo({
-						url: `/pages/login/login`,
+						url: `/pages/public/login`,
 					});
 				}
 			})
